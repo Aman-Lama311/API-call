@@ -1,45 +1,69 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ShimmerThumbnail, ShimmerTitle, ShimmerText } from "react-shimmer-effects";
 
 const Home = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [load, setLoad] = useState(false);
+  const fetched = useRef(false);
 
   const fetchData = async () => {
+    if (fetched.current) return;
+    fetched.current = true;
     setLoad(true);
     try {
-      const response = await axios.get('https://www.themealdb.com/api/json/v1/1/random.php');
+      const response = await axios.get('https://fakestoreapi.com/products');
       setData(response.data);
-    } catch {
-      console.log('Error fetching data');
+    } catch (error) {
+      console.error('Error fetching data:', error);
     } finally {
       setLoad(false);
     }
   };
 
-  const handleMeals = () => {
+  useEffect(() => {
     fetchData();
-  };
+  }, []);
+
+  if (load) {
+    return (
+      <div>
+        <h1 className="text-3xl font-semibold text-center py-6">All Products</h1>
+        <div className="w-full min-h-screen grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 px-8 py-5 justify-items-center">
+          {Array(8).fill().map((_, index) => (
+            <div key={index} className="shadow-lg space-y-4 p-4 w-[300px]">
+              <ShimmerThumbnail height={220} width={260} />
+              <ShimmerTitle line={1} gap={10} />
+              <ShimmerText line={2} gap={10} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full h-screen p-10">
-      <button
-        onClick={handleMeals}
-        className="bg-purple-500 px-5 py-2 rounded mb-4 cursor-pointer active:scale-95 transition-all text-white"
-      >
-        Show Meals
-      </button>
-
-      {load && <h1>Loading...</h1>}
-
-      {data &&
-        data.meals.map((item) => (
-          <div className="w-[300px] p-4 border rounded" key={item.idMeal}>
-            <img className='cursor-pointer hover:scale-105 transition-all rounded-t-md' src={item.strMealThumb} alt={item.strMeal} />
-            <h1 className='text-lg font-semibold mt-4'>{item.strCategory}</h1>
-            <p className="line-clamp-3">{item.strInstructions}</p>
+    <div>
+      <h1 className="text-3xl font-semibold text-center py-6">All Products</h1>
+      <div className="w-full min-h-screen grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 px-8 py-5 justify-items-center">
+        {data.map((item) => (
+          <div className="shadow-lg space-y-4 p-4 w-[300px]" key={item.id}>
+            <Link to={`/product/${item.id}`}>
+              <img
+                className="w-[200px] mx-auto hover:scale-105 transition-all cursor-pointer"
+                src={item.image}
+                alt={item.title}
+              />
+            </Link>
+            <h1 className="text-lg font-semibold">{item.title}</h1>
+            <div className="flex justify-between">
+              <p>⭐{item.rating.rate}</p>
+              <p>${item.price}</p>
+            </div>
           </div>
         ))}
+      </div>
     </div>
   );
 };
