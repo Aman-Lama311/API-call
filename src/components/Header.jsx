@@ -8,6 +8,7 @@ const Header = () => {
       <nav className='space-x-6'>
         <NavLink className={(e) => e.isActive? 'text-purple-500': ''} to='/'>Products</NavLink>
         <NavLink className={(e) => e.isActive? 'text-purple-500': ''} to='todos'>TodoList</NavLink>
+        <NavLink className={(e) => e.isActive? 'text-purple-500': ''} to='todo'>Todo</NavLink>
       </nav>
     </div>
   )

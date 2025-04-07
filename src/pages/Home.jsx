@@ -51,12 +51,12 @@ const Home = () => {
           <div className="shadow-lg space-y-4 p-4 w-[300px]" key={item.id}>
             <Link to={`/product/${item.id}`}>
               <img
-                className="w-[200px] mx-auto hover:scale-105 transition-all cursor-pointer"
+                className="w-[200px] h-[220px] mx-auto hover:scale-105 transition-all cursor-pointer"
                 src={item.image}
                 alt={item.title}
               />
             </Link>
-            <h1 className="text-lg font-semibold">{item.title}</h1>
+            <h1 className="text-lg font-semibold mt-4">{item.title}</h1>
             <div className="flex justify-between">
               <p>⭐{item.rating.rate}</p>
               <p>${item.price}</p>

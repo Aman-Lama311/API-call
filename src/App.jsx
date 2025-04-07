@@ -4,8 +4,12 @@ import RootLayout from './components/RootLayout';
 import Home from './pages/Home';
 import TodoList from './components/TodoList';
 import ProductDetails from './components/ProductDetails';
+import Todo from './components/Todo';
+
+
 
 const App = () => {
+  
   const router = createBrowserRouter([
     {
       path: '/',
@@ -22,6 +26,10 @@ const App = () => {
         {
           path: 'product/:productId', 
           element: <ProductDetails />
+        },
+        {
+          path: 'todo', 
+          element: <Todo />
         }
       ]
     },
