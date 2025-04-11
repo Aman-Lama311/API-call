@@ -1,71 +1,96 @@
-import { Button, Checkbox, Input, Option, Radio, Select, Textarea, Typography } from '@material-tailwind/react'
+import { Button, Checkbox, Input, Textarea, Typography } from '@material-tailwind/react'
 import { Formik } from 'formik'
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import * as Yup from 'yup'
+import { addTask } from '../features/taskSlice'
 
-export default function AddTodo() {
+const taskSchema = Yup.object({
+  title: Yup.string().max(25).required('Title is required'),
+  author: Yup.string().max(25).required('Author is required'),
+  categories: Yup.array().min(1,'At least one Category is required'),
+  detail: Yup.string().max(500).min(10).required('Detail is required')
+})
+
+const AddTodo = () => {
+
+  const dispatch = useDispatch();
+
+
   return (
-    <div className='w-full h-screen flex justify-center items-center'>
+    <div>
+     <Formik 
+     initialValues={{
+      title: '',
+      author: '',
+      categories: [],
+      detail: ''
+     }}
+     onSubmit={(values, {resetForm}) => {
+         dispatch(addTask(values));
+         resetForm();
+      }}
+     validationSchema={taskSchema}
+     >
+      {({values, handleChange, handleSubmit, touched, errors}) => {
+        return <form onSubmit={handleSubmit}
+        className='max-w-[500px] space-y-3'>
+          <div>
+            <Input 
+            name='title'
+            label='Title'
+            value={values.title}
+            onChange={handleChange}
+            />
+            {touched.title && errors.title && <p className='text-red-400 text-sm'>{errors.title}</p>}
+          </div>
+          <div>
+            <Input 
+            name='author'
+            label='Author'
+            value={values.author}
+            onChange={handleChange}
+            />
+            {touched.author && errors.author && <p className='text-red-400 text-sm'>{errors.author}</p>}
+          </div>
+          <div>
+            <Typography variant='h6'>Select Categories</Typography>
+              <Checkbox
+              name='categories'
+              label='Health'
+              value={'Health'}
+              onChange={handleChange}
+              /> 
+              <Checkbox
+              name='categories'
+              label='Business'
+              value={'Business'}
+              onChange={handleChange}
+              /> 
+              <Checkbox
+              name='categories'
+              label='Education'
+              value={'Education'}
+              onChange={handleChange}
+              /> 
+          {touched.categories && errors.categories && <p className='text-red-400 text-sm'>{errors.categories}</p>}
+          </div>
+          <div>
+            <Textarea
+            name='detail'
+            label='Detail'
+            value={values.detail}
+            onChange={handleChange}
+            />
+            {touched.detail && errors.detail && <p className='text-red-400 text-sm'>{errors.detail}</p>}
+          </div>
+          <Button type='submit'>Add Task</Button>
 
-      <Formik
-        initialValues={{
-          email: '',
-          password: ''
-        }}
-
-        onSubmit={(val) => {
-          console.log(val);
-
-        }}
-
-      >
-
-
-        {({ handleChange, handleSubmit, values}) => {
-
-          return <form
-            onSubmit={handleSubmit}
-            className='max-w-[500px] space-y-4'>
-            <div className='flex justify-center'>
-              <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcT-YS30TRdlNNPsScis_Tu1CKgwPVfdVXcVzuQ0JFiDZbZk90iT" className='w-40' alt="" />
-            </div>
-
-            <div className='text-center'>
-              <h1 className='text-3xl font-bold'>Sign in to your account</h1>
-              <p className='text-lg'>Or <span className='text-[#6B62B2]'>Stat your 14-days free trail</span> </p>
-            </div>
-
-            <div className='p-4 shadow-2xl space-y-4 rounded-md'>
-              <div>
-                <Input
-                  label='Email address'
-                  name='email'
-                  type='email'
-                  onChange={handleChange}
-                  value={values.email}
-                  required
-                />
-              </div>
-              <div>
-                <Input
-                  label='Password'
-                  name='password'
-                  type='password'
-                  onChange={handleChange}
-                  value={values.password}
-                  required
-                />
-              </div>
-            </div>
-
-
-          </form>
-        }}
-
-
-      </Formik>
-
-
-
+        </form>
+      } }
+     </Formik>
     </div>
   )
 }
+
+export default AddTodo

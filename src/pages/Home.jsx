@@ -46,7 +46,7 @@ const Home = () => {
   return (
     <div>
       <h1 className="text-3xl font-semibold text-center py-6">All Products</h1>
-      <div className="w-full min-h-screen grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 px-8 py-5 justify-items-center">
+      <div className="w-full min-h-screen grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 px-8 py-5 justify-items-center">
         {data.map((item) => (
           <div className="shadow-lg space-y-4 p-4 w-[300px]" key={item.id}>
             <Link to={`/product/${item.id}`}>
